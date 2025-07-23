@@ -5,5 +5,5 @@ Once installed, it will appear on the viewport's tool tab.
 
 You can apply it per object or for the entire scene. If you go per object you obvisouly need to select it, or them, first.
 
-More information here: https://www.youtube.com/watch?v=LbbgdfHf42w
+More information here: [(https://youtu.be/Dyi6pgg07B0)](https://youtu.be/Dyi6pgg07B0)
 
