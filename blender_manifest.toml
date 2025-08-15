@@ -9,4 +9,4 @@ website = "https://github.com/riouxr/Object-Display"
 tags = ["Mesh"]
 blender_version_min = "4.2.0"
 license = ["SPDX:GPL-3.0-or-later"]
-copyright = ["2025 Robert Rioux"]
+copyright = ["2024 Robert Rioux"]
