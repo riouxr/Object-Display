@@ -8,238 +8,120 @@ bl_info = {
     "category": "3D View",
 }
 
+
 import bpy
 
-# -----------------------------
-# Utilities (STRICT selection semantics)
-# -----------------------------
+from . import operators, ui
 
-def iter_selected_meshes(context):
-    """Yield ONLY mesh objects that are currently selected in the viewport."""
-    for obj in context.selected_objects:
-        if obj and obj.type == 'MESH':
-            yield obj
 
-def iter_unselected_meshes(context):
-    """Yield ONLY mesh objects in the scene that are NOT selected."""
-    selected_set = {o for o in context.selected_objects if o and o.type == 'MESH'}
-    for obj in context.scene.objects:
-        if obj.type == 'MESH' and obj not in selected_set:
-            yield obj
-
-def _set_display_type(objs, display_type):
-    for obj in objs:
-        try:
-            obj.display_type = display_type
-        except Exception:
-            pass
-
-# -----------------------------
-# Operators — ALL
-# -----------------------------
-
-class MESH_OT_display_bounds_all(bpy.types.Operator):
-    bl_idname = "mesh.display_bounds_all"
-    bl_label = "All Bounds"
-    bl_description = "Set the display type of all meshes in the scene to Bounds"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type((o for o in context.scene.objects if o.type == 'MESH'), 'BOUNDS')
-        return {'FINISHED'}
-
-class MESH_OT_display_wire_all(bpy.types.Operator):
-    bl_idname = "mesh.display_wire_all"
-    bl_label = "All Wire"
-    bl_description = "Set the display type of all meshes in the scene to Wire"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type((o for o in context.scene.objects if o.type == 'MESH'), 'WIRE')
-        return {'FINISHED'}
-
-class MESH_OT_display_solid_all(bpy.types.Operator):
-    bl_idname = "mesh.display_solid_all"
-    bl_label = "All Solid"
-    bl_description = "Set the display type of all meshes in the scene to Solid"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type((o for o in context.scene.objects if o.type == 'MESH'), 'SOLID')
-        return {'FINISHED'}
-
-class MESH_OT_display_texture_all(bpy.types.Operator):
-    bl_idname = "mesh.display_texture_all"
-    bl_label = "All Textured"
-    bl_description = "Set the display type of all meshes in the scene to Textured"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type((o for o in context.scene.objects if o.type == 'MESH'), 'TEXTURED')
-        return {'FINISHED'}
-
-# -----------------------------
-# Operators — SELECTED (STRICT)
-# -----------------------------
-
-class MESH_OT_display_bounds_selected(bpy.types.Operator):
-    bl_idname = "mesh.display_bounds_selected"
-    bl_label = "Selected Bounds"
-    bl_description = "Set the display type of SELECTED mesh objects only to Bounds"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_selected_meshes(context), 'BOUNDS')
-        return {'FINISHED'}
-
-class MESH_OT_display_wire_selected(bpy.types.Operator):
-    bl_idname = "mesh.display_wire_selected"
-    bl_label = "Selected Wire"
-    bl_description = "Set the display type of SELECTED mesh objects only to Wire"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_selected_meshes(context), 'WIRE')
-        return {'FINISHED'}
-
-class MESH_OT_display_solid_selected(bpy.types.Operator):
-    bl_idname = "mesh.display_solid_selected"
-    bl_label = "Selected Solid"
-    bl_description = "Set the display type of SELECTED mesh objects only to Solid"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_selected_meshes(context), 'SOLID')
-        return {'FINISHED'}
-
-class MESH_OT_display_texture_selected(bpy.types.Operator):
-    bl_idname = "mesh.display_texture_selected"
-    bl_label = "Selected Textured"
-    bl_description = "Set the display type of SELECTED mesh objects only to Textured"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_selected_meshes(context), 'TEXTURED')
-        return {'FINISHED'}
-
-# -----------------------------
-# Operators — UNSELECTED (STRICT)
-# -----------------------------
-
-class MESH_OT_display_bounds_unselected(bpy.types.Operator):
-    bl_idname = "mesh.display_bounds_unselected"
-    bl_label = "Unselected Bounds"
-    bl_description = "Set the display type of UNSELECTED mesh objects only to Bounds"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_unselected_meshes(context), 'BOUNDS')
-        return {'FINISHED'}
-
-class MESH_OT_display_wire_unselected(bpy.types.Operator):
-    bl_idname = "mesh.display_wire_unselected"
-    bl_label = "Unselected Wire"
-    bl_description = "Set the display type of UNSELECTED mesh objects only to Wire"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_unselected_meshes(context), 'WIRE')
-        return {'FINISHED'}
-
-class MESH_OT_display_solid_unselected(bpy.types.Operator):
-    bl_idname = "mesh.display_solid_unselected"
-    bl_label = "Unselected Solid"
-    bl_description = "Set the display type of UNSELECTED mesh objects only to Solid"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_unselected_meshes(context), 'SOLID')
-        return {'FINISHED'}
-
-class MESH_OT_display_texture_unselected(bpy.types.Operator):
-    bl_idname = "mesh.display_texture_unselected"
-    bl_label = "Unselected Textured"
-    bl_description = "Set the display type of UNSELECTED mesh objects only to Textured"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        _set_display_type(iter_unselected_meshes(context), 'TEXTURED')
-        return {'FINISHED'}
-
-# -----------------------------
-# Panel
-# -----------------------------
-
-class VIEW3D_PT_display(bpy.types.Panel):
-    bl_label = "Display Modes"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = "View"
+#===================================
+    # --- Object Menu ---
+#===================================
+class OBJECTDISPLAY_MT_outliner_object_submenu(bpy.types.Menu):
+    bl_label = "Object Display Mode"
+    bl_idname = "OBJECTDISPLAY_MT_outliner_object_submenu"
 
     def draw(self, context):
         layout = self.layout
+        
+        op_bounds = layout.operator('objectsdisplay.objects_viewport_display', text="Display selected as bounds", icon='PIVOT_BOUNDBOX')
+        op_bounds.select_method = 'SELECTED'
+        op_bounds.display_mode = 'BOUNDS'
+        
+        op_wire = layout.operator('objectsdisplay.objects_viewport_display', text="Display selected as wire", icon='MOD_WIREFRAME')
+        op_wire.select_method = 'SELECTED'
+        op_wire.display_mode = 'WIRE'
+        
+        op_solid = layout.operator('objectsdisplay.objects_viewport_display', text="Display selected as solid", icon='SHADING_SOLID')
+        op_solid.select_method = 'SELECTED'
+        op_solid.display_mode = 'SOLID'
+        
+        op_textured = layout.operator('objectsdisplay.objects_viewport_display', text="Display selected as textured", icon='TEXTURE')
+        op_textured.select_method = 'SELECTED'
+        op_textured.display_mode = 'TEXTURED'
 
-        # --- Selected ---
-        col = layout.column(align=True)
-        col.label(text="Selected")
-        row = col.row(align=True)
-        row.operator("mesh.display_bounds_selected", text="", icon="PIVOT_BOUNDBOX")
-        row.operator("mesh.display_wire_selected",   text="", icon="MOD_WIREFRAME")
-        row.operator("mesh.display_solid_selected",  text="", icon="SHADING_SOLID")
-        row.operator("mesh.display_texture_selected",text="", icon="TEXTURE")
 
-        # --- Unselected ---
-        col = layout.column(align=True)
-        col.separator()
-        col.label(text="Unselected")
-        row = col.row(align=True)
-        row.operator("mesh.display_bounds_unselected", text="", icon="PIVOT_BOUNDBOX")
-        row.operator("mesh.display_wire_unselected",   text="", icon="MOD_WIREFRAME")
-        row.operator("mesh.display_solid_unselected",  text="", icon="SHADING_SOLID")
-        row.operator("mesh.display_texture_unselected",text="", icon="TEXTURE")
+#===================================
+    # --- Collection Menu ---
+#===================================
+class OBJECTDISPLAY_MT_outliner_collection_submenu(bpy.types.Menu):
+    bl_label = "Object Display Mode"
+    bl_idname = "OBJECTDISPLAY_MT_outliner_collection_submenu"
 
-        # --- All ---
-        col = layout.column(align=True)
-        col.separator()
-        col.label(text="All")
-        row = col.row(align=True)
-        row.operator("mesh.display_bounds_all", text="", icon="PIVOT_BOUNDBOX")
-        row.operator("mesh.display_wire_all",   text="", icon="MOD_WIREFRAME")
-        row.operator("mesh.display_solid_all",  text="", icon="SHADING_SOLID")
-        row.operator("mesh.display_texture_all",text="", icon="TEXTURE")
+    def draw(self, context):
+        layout = self.layout
+        
+        # Add operators with different display modes for selected objects
+        op_bounds = layout.operator('objectsdisplay.objects_viewport_display', text="Display collection as bounds", icon='PIVOT_BOUNDBOX')
+        op_bounds.select_method = 'COLLECTION'
+        op_bounds.display_mode = 'BOUNDS'
+        
+        op_wire = layout.operator('objectsdisplay.objects_viewport_display', text="Display collection as wire", icon='MOD_WIREFRAME')
+        op_wire.select_method = 'COLLECTION'
+        op_wire.display_mode = 'WIRE'
+        
+        op_solid = layout.operator('objectsdisplay.objects_viewport_display', text="Display collection as solid", icon='SHADING_SOLID')
+        op_solid.select_method = 'COLLECTION'
+        op_solid.display_mode = 'SOLID'
+        
+        op_textured = layout.operator('objectsdisplay.objects_viewport_display', text="Display collection as textured", icon='TEXTURE')
+        op_textured.select_method = 'COLLECTION'
+        op_textured.display_mode = 'TEXTURED'
 
-# -----------------------------
-# Registration
-# -----------------------------
 
+#===================================
+    # --- Registration ---
+#===================================
 classes = (
-    # Panel
-    VIEW3D_PT_display,
+    # ui
+    ui.OBJECTDISPLAY_PT_objectdisplay_panel,
 
-    # All
-    MESH_OT_display_bounds_all,
-    MESH_OT_display_wire_all,
-    MESH_OT_display_solid_all,
-    MESH_OT_display_texture_all,
-
-    # Selected
-    MESH_OT_display_bounds_selected,
-    MESH_OT_display_wire_selected,
-    MESH_OT_display_solid_selected,
-    MESH_OT_display_texture_selected,
-
-    # Unselected
-    MESH_OT_display_bounds_unselected,
-    MESH_OT_display_wire_unselected,
-    MESH_OT_display_solid_unselected,
-    MESH_OT_display_texture_unselected,
+    # operators
+    operators.OBJECTSDISPLAY_OT_objects_viewport_display,
+    
+    # menus
+    OBJECTDISPLAY_MT_outliner_object_submenu,
+    OBJECTDISPLAY_MT_outliner_collection_submenu,
 )
 
+def menu_func(self, context):
+    layout = self.layout
+    layout.separator()
+    
+    layout.menu("OBJECTDISPLAY_MT_outliner_object_submenu")
+
+def menu_func_collection(self, context):
+    layout = self.layout
+    layout.separator()
+    
+    layout.menu("OBJECTDISPLAY_MT_outliner_collection_submenu")
+
+
 def register():
+    # Register classes
     for cls in classes:
         bpy.utils.register_class(cls)
 
+    bpy.types.OUTLINER_MT_context_menu.append(menu_func)
+    bpy.types.OUTLINER_MT_object.append(menu_func)
+    bpy.types.OUTLINER_MT_collection.append(menu_func_collection)
+
+
+
 def unregister():
+    try:
+        bpy.types.OUTLINER_MT_context_menu.remove(menu_func)
+    except (AttributeError, ValueError):
+        pass
+    try:
+        bpy.types.OUTLINER_MT_object.remove(menu_func)
+    except (AttributeError, ValueError):
+        pass
+    try:
+        bpy.types.OUTLINER_MT_collection.remove(menu_func_collection)
+    except (AttributeError, ValueError):
+        pass
+
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
 
