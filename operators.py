@@ -74,6 +74,11 @@ class OBJECTSDISPLAY_OT_objects_viewport_display(bpy.types.Operator):
     def set_collection_name(self, context, display_mode):
         collection = context.view_layer.active_layer_collection.collection
 
+        # Skip the Scene Collection (master) and any linked/override collections — their name is read-only
+        if collection == context.scene.collection or collection.library is not None or collection.override_library is not None:
+            self.report({'INFO'}, "Active collection name is read-only; skipping rename")
+            return
+
         strip_suffixes = (
             " WIRE", " BOUNDS", " SOLID", " TEXTURED",
             " Wire", " Bounds",  " Solid", " Textured",

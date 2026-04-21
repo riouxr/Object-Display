@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Display Modes — Selected / Unselected / All",
     "author": "ChatGPT + User",
-    "version": (1, 3, 1),
+    "version": (1, 4, 0),
     "blender": (3, 0, 0),
     "location": "3D Viewport > Sidebar > View",
     "description": "Icon-only controls to set object display modes for Selected, Unselected, or All mesh objects",
