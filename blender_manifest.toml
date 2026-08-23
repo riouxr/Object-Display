@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 id = "objectdisplay"
-version = "1.4.1"
+version = "1.4.2"
 name = "Mesh Display"
 tagline = "Adds buttons to quickly switch between mesh display types"
 maintainer = "Blender Bob"
